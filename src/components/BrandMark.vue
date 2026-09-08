@@ -37,14 +37,22 @@ onBeforeUnmount(() => { cancelAnimationFrame(frame); media?.removeEventListener(
   <svg class="brand-mark" viewBox="65 90 382 325" fill="none" aria-hidden="true" @pointerenter="setHover(true)" @pointerleave="setHover(false)">
     <defs>
       <clipPath :id="`${id}-left`"><path :d="left" :transform="lt" /></clipPath>
-      <clipPath :id="`${id}-right`"><path :d="right" :transform="rt" /></clipPath>
+      <!-- Subtract the purple stroke to keep tint strictly inside its inner edge. -->
+      <mask :id="`${id}-left-interior`" maskUnits="userSpaceOnUse" x="-100" y="-100" width="712" height="712" style="mask-type: luminance">
+        <path :d="left" :transform="lt" fill="white" stroke="black" stroke-width="26" />
+      </mask>
     </defs>
     <path :opacity="Math.max(0, 1 - spread / 8)" d="M297.728 179.391C302.322 192.046 304.727 205.656 304.504 219.806C303.664 273.194 265.763 317.74 214.408 331.747C209.815 319.092 207.412 305.483 207.635 291.334C208.475 237.948 246.374 193.398 297.728 179.391Z" fill="#20C7A5" />
     <g :opacity="Math.min(1, spread / 8)" :clip-path="`url(#${id}-left)`"><path :d="right" :transform="rt" fill="#20C7A5" /></g>
-    <path :d="left" :transform="lt" stroke="#6D3DF5" stroke-width="26" />
-    <path :d="right" :transform="rt" stroke="#211C2F" stroke-width="26" />
+
     <path :opacity="Math.max(0, 1 - spread / 8)" d="M270.114 176.728C282.519 191.367 290 210.309 290 231C290 277.392 252.392 315 206 315C204.456 315 202.923 314.956 201.399 314.874C197.895 304.128 196 292.654 196 280.738C196 232.553 226.984 191.606 270.114 176.728Z" fill="#20C7A5" fill-opacity="0.6" />
-    <g :opacity="Math.min(1, spread / 8)" :clip-path="`url(#${id}-right)`"><path :d="left" :transform="lt" stroke="#20C7A5" stroke-width="26" opacity=".6" /></g>
+    <!-- Keep the purple contour un-tinted at every animation position. -->
+    <path :d="left" :transform="lt" stroke="#6D3DF5" stroke-width="26" />
+    <!-- Keep the dark contour above the lens, then tint only its portion inside the purple circle. -->
+    <path :d="right" :transform="rt" stroke="#211C2F" stroke-width="26" />
+    <g :mask="`url(#${id}-left-interior)`">
+      <path :d="right" :transform="rt" stroke="#20C7A5" stroke-width="26" opacity=".6" />
+    </g>
   </svg>
 </template>
 
