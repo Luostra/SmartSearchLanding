@@ -15,6 +15,7 @@ import {
 } from "lucide-vue-next";
 import BrandMark from "./components/BrandMark.vue";
 import ProductArt from "./components/ProductArt.vue";
+import RepositoryLinks from "./components/RepositoryLinks.vue";
 import { findScenario, scenarios } from "./data/scenarios";
 import { useScrollReveal } from "./composables/useScrollReveal";
 
@@ -486,6 +487,7 @@ const faqs = [
         ><span class="final-note">Открытое демо · Без регистрации</span>
       </div>
     </section>
+    <RepositoryLinks />
   </main>
   <footer class="container footer">
     <a class="wordmark" href="#" aria-label="SmartSearch — наверх"
