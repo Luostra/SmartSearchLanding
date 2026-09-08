@@ -14,6 +14,7 @@ import {
   MoveRight,
 } from "lucide-vue-next";
 import BrandMark from "./components/BrandMark.vue";
+import HeaderGlass from "./components/HeaderGlass.vue";
 import ProductArt from "./components/ProductArt.vue";
 import RepositoryLinks from "./components/RepositoryLinks.vue";
 import { findScenario, scenarios } from "./data/scenarios";
@@ -22,6 +23,11 @@ import { useScrollReveal } from "./composables/useScrollReveal";
 useScrollReveal();
 
 const menuOpen = ref(false);
+const menuToggle = ref<HTMLButtonElement>();
+function dismissMenu() {
+  menuOpen.value = false;
+  menuToggle.value?.focus();
+}
 const query = ref(scenarios[0]!.query);
 const selected = ref(scenarios[0]!);
 const searching = ref(false);
@@ -97,6 +103,7 @@ const faqs = [
 <template>
   <a class="skip-link" href="#main">Перейти к содержимому</a>
   <header class="site-header">
+    <HeaderGlass />
     <div class="container header-inner">
       <a class="wordmark" href="#" aria-label="SmartSearch — на главную"
         ><BrandMark intro /><span
@@ -112,6 +119,8 @@ const faqs = [
       /></a>
       <button
         class="mobile-toggle"
+        ref="menuToggle"
+        @keydown.esc.prevent="dismissMenu"
         :aria-expanded="menuOpen"
         aria-controls="mobile-nav"
         :aria-label="menuOpen ? 'Закрыть меню' : 'Открыть меню'"
@@ -120,18 +129,23 @@ const faqs = [
         <X v-if="menuOpen" /><Menu v-else />
       </button>
     </div>
+    <Transition name="mobile-menu">
     <nav
       v-if="menuOpen"
       id="mobile-nav"
       class="mobile-nav"
       aria-label="Мобильная навигация"
-      @keydown.esc="menuOpen = false"
+      :aria-hidden="!menuOpen"
+      :inert="!menuOpen"
+      @keydown.esc.prevent="dismissMenu"
     >
+      <HeaderGlass panel />
       <a href="#how" @click="menuOpen = false">Как это работает</a
       ><a href="#possibilities" @click="menuOpen = false">Возможности</a
       ><a href="#faq" @click="menuOpen = false">Вопросы</a
       ><a href="#demo" @click="menuOpen = false">Попробовать демо</a>
     </nav>
+    </Transition>
   </header>
   <main id="main">
     <section class="hero container">

@@ -105,3 +105,25 @@
   [data-reveal] { opacity: 1; transform: none; filter: none; }
   .faq-answer { grid-template-rows: 1fr; visibility: visible; opacity: 1; }
 }
+
+/* Keep the panel mounted through its closing transition. */
+.mobile-nav { transform-origin: top right; }
+.mobile-menu-enter-active {
+  transition: opacity 260ms ease, transform 320ms cubic-bezier(.16, 1, .3, 1);
+}
+.mobile-menu-leave-active {
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(.4, 0, 1, 1);
+  pointer-events: none;
+}
+.mobile-menu-enter-from, .mobile-menu-leave-to {
+  opacity: 0;
+  transform: translateY(-12px) scale(.98);
+}
+.mobile-menu-enter-to, .mobile-menu-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-enter-active, .mobile-menu-leave-active { transition: none; }
+  .mobile-menu-enter-from, .mobile-menu-leave-to { transform: none; }
+}
