@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { useId } from "vue";
-withDefaults(defineProps<{ animated?: boolean }>(), { animated: false });
+import { onMounted, ref, useId } from "vue";
+const props = withDefaults(defineProps<{ animated?: boolean }>(), { animated: false });
 const cutoutId = "brand-cutout-" + useId().replace(/:/g, "");
+const intro = ref(false);
+onMounted(() => {
+  intro.value = props.animated && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+});
+function finishIntro(event: AnimationEvent) {
+  if (event.animationName.startsWith("brand-intro-")) intro.value = false;
+}
 </script>
 
 <template>
-  <svg class="brand-mark" :class="{ 'brand-mark--animated': animated }" viewBox="51 68 376 376" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <svg class="brand-mark" :class="{ 'brand-mark--animated': animated, 'brand-mark--intro': intro }" @animationend="finishIntro" @animationcancel="finishIntro" viewBox="51 68 376 376" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
 <defs><mask :id="cutoutId" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512" style="mask-type:luminance"><rect width="512" height="512" fill="white"/><g class="brand-loupe"><path d="M271 289.333L322.667 344.333" stroke="black" stroke-width="68.8" stroke-linecap="round"/></g></mask></defs>
 <path class="brand-purple" d="M149.123 288.834C84.1333 267.2 82.5333 188.8 120.933 137.6C143.333 105.6 178.533 88 213.733 88H392.933C392.933 145.6 327.973 180.363 264.18 163.271C247.216 158.726 229.33 158.921 212.47 163.835C195.609 168.75 180.42 178.195 168.555 191.143C156.69 204.092 148.604 220.047 145.178 237.271C141.752 254.496 143.116 272.331 149.123 288.834Z" fill="#6D3DF5"/>
 <g :mask="`url(#${cutoutId})`"><path class="brand-mint" d="M329.544 223.166C394.533 244.8 396.133 323.2 357.733 374.4C335.333 406.4 300.133 424 264.933 424L85.7332 424C85.7332 366.4 150.693 331.637 214.487 348.729C231.45 353.274 249.336 353.079 266.197 348.165C283.057 343.25 298.247 333.805 310.112 320.857C321.977 307.908 330.062 291.953 333.489 274.729C336.915 257.504 335.55 239.669 329.544 223.166Z" fill="#20C7A5"/></g>
@@ -35,6 +42,30 @@ const cutoutId = "brand-cutout-" + useId().replace(/:/g, "");
     transform: translate(-5px, -6px) rotate(-8deg);
   }
 }
+
+/* One complete outward-and-back gesture on page mount. */
+.brand-mark--intro .brand-purple {
+  animation: brand-intro-purple 1800ms cubic-bezier(.45, 0, .25, 1) 180ms 1;
+}
+.brand-mark--intro .brand-mint {
+  animation: brand-intro-mint 1800ms cubic-bezier(.45, 0, .25, 1) 180ms 1;
+}
+.brand-mark--intro .brand-loupe {
+  animation: brand-intro-loupe 1800ms cubic-bezier(.45, 0, .25, 1) 180ms 1;
+}
+@keyframes brand-intro-purple {
+  0%, 100% { transform: translate(0, 0); }
+  40%, 55% { transform: translate(-4px, -8px); }
+}
+@keyframes brand-intro-mint {
+  0%, 100% { transform: translate(0, 0); }
+  40%, 55% { transform: translate(4px, 8px); }
+}
+@keyframes brand-intro-loupe {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  40%, 55% { transform: translate(-5px, -6px) rotate(-8deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .brand-mark--animated .brand-purple,
   .brand-mark--animated .brand-mint,
