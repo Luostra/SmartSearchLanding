@@ -106,7 +106,7 @@ const faqs = [
     <HeaderGlass />
     <div class="container header-inner">
       <a class="wordmark" href="#" aria-label="SmartSearch — на главную"
-        ><BrandMark intro /><span
+        ><BrandMark /><span
           >SmartSearch<span class="wordmark-dot">.</span></span
         ></a
       >
@@ -189,7 +189,7 @@ const faqs = [
             не промок под дождём»</span
           >
         </div>
-        <div class="hero-mark"><BrandMark intro /></div>
+        <div class="hero-mark"><BrandMark animated /></div>
         <div class="meaning-label">
           <Sparkles :size="15" /> Есть совпадение по смыслу
         </div>
